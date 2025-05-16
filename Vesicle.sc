@@ -58,6 +58,17 @@ Vesicle {
 				sig = BBandPass.ar(sig, bpf, bw);
 				OffsetOut.ar(0, Pan2.ar(sig * env, pan));
 			}).add;
+            
+            SynthDef(\grainx, { |buf=0, start=0, amp=0.5, dur=0.3, pan=0, rate=1.0, atkSlope=1, relSlope=2,lp=19000,hp=20|
+				var sig, shape, env, pos;
+				shape = Env([0, amp, 0], [dur*0.5, dur*0.5], [10,10]);
+				env = EnvGen.ar(shape, doneAction: 2);
+				pos = start * BufFrames.ir(buf);
+				sig = PlayBuf.ar(1, buf, rate * BufRateScale.ir(buf), 1, pos, 0);
+				sig = RHPF.ar(sig, hp, 0.2);
+				sig = RLPF.ar(sig, lp, 0.2);
+				OffsetOut.ar(0, Pan2.ar(sig * env, pan));
+			}).add;
 
 			{ |i|
 				SynthDef(\unigrain ++ (i+1), { |out = 0, buf = 0, start = 0.0, rate = 1.0, gdur = 1.0, bpFreq = 30.0, bpRQ = 0.5, bpBlend = 0.0, smooth = 1.0, skew = 0.5, width = 0.5, index = 1 pan = 0.0, amp = 0.5 |
