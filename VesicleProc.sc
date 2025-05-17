@@ -76,7 +76,7 @@ VesicleProc {
         }.play;
     }
 
-	*shaped {|vesicle, sound, dur=0.01, totalDur=10.0, amp=1.0
+	*shaped {|vesicle, name, sound, dur=0.01, totalDur=10.0, amp=1.0
         startEnvLower, startEnvUpper,
         rateEnvLower, rateEnvUpper,
         grdurEnvLower, grdurEnvUpper,
@@ -108,7 +108,7 @@ VesicleProc {
                         \dur, rrand(grdurEnvLower[i], grdurEnvUpper[i]),
                         \start, rrand(startEnvLower[i], startEnvUpper[i]),
                         \rate, rrand(rateEnvLower[i], rateEnvUpper[i]),
-						\pan, rrand(panEnvLower[i], panEnvUpper[i].postln),
+						\pan, rrand(panEnvLower[i], panEnvUpper[i]),
 						\lp, rrand(lpfrom,lpto),
 						\hp, rrand(hpfrom,hpto),
 						\amp, amp
