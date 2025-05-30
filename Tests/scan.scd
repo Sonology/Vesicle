@@ -61,7 +61,7 @@ VesicleProc.scan(
 VesicleProc.scan(
 	v,
 	"woodcut.wav",
-	dur: b.duration,
+	dur: 10,
 	gdur: [0.15, 0.125, 0.5, 0.1],
 	rate: 1,
 	factor: 0.9,
