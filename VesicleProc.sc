@@ -16,7 +16,7 @@ VesicleProc {
                 var start = (i * next) / total;
 
                 Server.default.makeBundle(0.1,
-                    { 
+                    {
                         Synth(\graingliss, [
                             \buf, sample.bufnum,
                             \dur, dur,
@@ -25,7 +25,7 @@ VesicleProc {
                             \to, i.linlin(0,times,2.0,10.0)
                     ]) }
                 );
-                
+
                 next.wait;
             };
 
@@ -75,4 +75,40 @@ VesicleProc {
 
         }.play;
     }
+
+	*scan { |
+		vesicle, sound, dur = 1,
+		rate = 1, gdur = 1, density = 10, factor = 1,
+		lo = 0.0, hi = 1.0, vary = 0.0,
+		prob = 1, spread = 0.25,
+		bpFreq = 300, bpBlend = 0, bpRQ = 0.25,
+		skew = 0.5, width = 1, index = 1, curve = 'sine', pan = 0.0, amp = 1
+		|
+		var sample = vesicle.buffers[sound];
+		var sr = Server.default.sampleRate;
+		var numFrames = sample.numFrames;
+		var sched = SystemClock.sched(dur, { eventStreamPlayer.stop });
+		var isArray = { |val| if(val.isArray, { val.size - 1 }, { 1 }) };
+		var rateSize, gdurSize, densitySize, factorSize, ampSize, bpFreqSize, bpBlendSize, bpRQSize, eventStreamPlayer;
+		# rateSize, gdurSize, densitySize, factorSize, ampSize, bpFreqSize, bpBlendSize, bpRQSize = [rate, gdur, density, factor, amp, bpFreq, bpBlend, bpRQ].collect(isArray.value(_));
+		eventStreamPlayer = Pbind(
+			\instrument, \grainunis,
+			\buf, sample,
+			\density, Pseg(density, dur / densitySize, curve, inf),
+			\dur, (1 / Pkey(\density, inf)),
+			\gdur, Pseg(gdur, dur / gdurSize, curve, inf),
+			\rate, Pseg(rate, dur / rateSize, curve, inf),
+			\start, Pnaryop(\wrap, Pn(Pseries(0.0, ((sr * (Pseg(factor, dur / factorSize, curve, inf))) / Pkey(\density, inf)), numFrames), inf) + (Pwhite(sr.neg, sr, inf) * vary), [lo * numFrames, hi * numFrames]),
+			\pan, pan + (Pwhite(-1.0 - pan, 1.0 - pan, inf) * spread),
+			\amp, Pseg(amp, dur / ampSize, curve, inf),
+			\rest, Pfunc { if (prob.coin, { \play }, { \rest }) },
+			\skew, skew, \width, width, \index, index,
+			\bpFreq, Pseg(bpFreq, dur / bpFreqSize, curve, inf),
+			\bpBlend, Pseg(bpBlend, dur / bpBlendSize, curve, inf),
+			\bpRQ, Pseg(bpRQ, dur / bpRQSize, curve, inf)
+		).play
+
+		^eventStreamPlayer
+	}
+
 }
