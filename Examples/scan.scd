@@ -1,4 +1,5 @@
-v = Vesicle(Platform.userExtensionDir +/+ "Vesicle/Audio/*")
+p = Platform.userAppSupportDir +/+ "downloaded-quarks/Vesicle/Audio/*";
+v = Vesicle(p)
 
 // voice
 VesicleProc.scan(v, "voice.wav", 5, factor: 0.25, amp: [0, 1, 1, 0])
