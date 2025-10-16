@@ -88,9 +88,9 @@ VesicleProc {
 		var sr = Server.default.sampleRate;
 		var numFrames = sample.numFrames;
 		var sched = SystemClock.sched(dur, { eventStreamPlayer.stop });
-		var isArray = { |val| if(val.isArray, { val.size - 1 }, { 1 }) };
-		var rateSize, gdurSize, densitySize, factorSize, ampSize, bpFreqSize, bpBlendSize, bpRQSize, eventStreamPlayer;
-		# rateSize, gdurSize, densitySize, factorSize, ampSize, bpFreqSize, bpBlendSize, bpRQSize = [rate, gdur, density, factor, amp, bpFreq, bpBlend, bpRQ].collect(isArray.value(_));
+		var isArray = { |val| if (val.isArray, { val.size - 1 }, { 1 }) };
+		var rateSize, gdurSize, densitySize, factorSize, probSize, ampSize, bpFreqSize, bpBlendSize, bpRQSize, eventStreamPlayer;
+		# rateSize, gdurSize, densitySize, factorSize, probSize, ampSize, bpFreqSize, bpBlendSize, bpRQSize = [rate, gdur, density, factor, prob, amp, bpFreq, bpBlend, bpRQ].collect(isArray.value(_));
 		eventStreamPlayer = Pbind(
 			\instrument, \grainunis,
 			\buf, sample,
@@ -101,7 +101,7 @@ VesicleProc {
 			\start, Pnaryop(\wrap, Pn(Pseries(0.0, ((sr * (Pseg(factor, dur / factorSize, curve, inf))) / Pkey(\density, inf)), numFrames), inf) + (Pwhite(sr.neg, sr, inf) * vary), [lo * numFrames, hi * numFrames]),
 			\pan, pan + (Pwhite(-1.0 - pan, 1.0 - pan, inf) * spread),
 			\amp, Pseg(amp, dur / ampSize, curve, inf),
-			\rest, Pfunc { if (prob.coin, { \play }, { \rest }) },
+			\rest, Pif(Pseg(prob, dur / probSize, curve, inf).coin, \play, \rest),
 			\skew, skew, \width, width, \index, index,
 			\bpFreq, Pseg(bpFreq, dur / bpFreqSize, curve, inf),
 			\bpBlend, Pseg(bpBlend, dur / bpBlendSize, curve, inf),

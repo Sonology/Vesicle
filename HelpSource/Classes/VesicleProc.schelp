@@ -1,0 +1,91 @@
+TITLE:: VesicleProc
+SUMMARY:: Granular Synthesis Process
+CATEGORIES:: Vesicle
+RELATED:: Classes/Vesicle
+
+DESCRIPTION::
+The main interface for running link::Classes/Vesicle:: granular synthesis processes.
+
+CLASSMETHODS::
+
+METHOD:: glisson
+Glisson sound process
+ARGUMENT:: vesicle
+a link::Classes/Vesicle:: instance
+ARGUMENT:: sound
+a link::Classes/String:: with a soundfile name (e.g., "voice.wav")
+ARGUMENT:: dur
+ARGUMENT:: overlap
+
+METHOD:: fold
+Folding sound process. Same args as link::#*glisson::
+
+METHOD:: bp
+Band-pass sound process. Same args as link::#*glisson::
+
+METHOD:: scan
+Sample scanning process with per-grain band-pass filter
+
+ARGUMENT:: vesicle
+a link::Classes/Vesicle:: instance
+ARGUMENT:: sound
+a link::Classes/String:: with a soundfile name (e.g., "voice.wav")
+ARGUMENT:: dur
+Duration of a process (in seconds)
+ARGUMENT:: rate
+Playback rate
+ARGUMENT:: gdur
+Grain duration (in seconds)
+ARGUMENT:: density
+Number of grains generated (per second)
+ARGUMENT:: factor
+Scanning speed factor (e.g., 1.0 is original playback speed; negative values is reverse playback)
+ARGUMENT:: lo
+Start position (value between 0.0 and 1.0)
+ARGUMENT:: hi
+End position (value between 0.0 and 1.0)
+ARGUMENT:: vary
+Position deviation factor. Random values added to position within lo and hi range (value between 0.0 and 1.0)
+ARGUMENT:: prob
+Probability of grain generation (value between 0.0 and 1.0, e.g., 1.0 is 100% chance for grain generation)
+ARGUMENT:: spread
+Stereo spread factor (value between 0.0 and 1.0)
+ARGUMENT:: bpFreq
+Band pass filter frequency (in Hz)
+ARGUMENT:: bpBlend
+Band pass filter blend amount (0.0 is dry, 1.0 is wet)
+ARGUMENT:: bpRQ
+Band pass filter reciprocal of Q (see link::Classes/BPF:: for more info)
+ARGUMENT:: skew
+Skew amount of amplitude envelope Hanning window
+ARGUMENT:: width
+Width of amplitude envelope Hanning window
+ARGUMENT:: index
+Index of amplitude envelope Hanning window
+ARGUMENT:: curve
+a link::Classes/Symbol::, link::Classes/Float::, or an link::Classes/Array:: of those. Determines the shape of the array segments (see link::Classes/Env:: for more info)
+ARGUMENT:: pan
+Panning position (a link::Classes/Float:: or an link::Classes/Array:: of values between -1.0 and 1.0)
+ARGUMENT:: amp
+Amplitude of a grain (a link::Classes/Float:: or an link::Classes/Array:: of values)
+RETURNS::
+a link::Classes/VesicleProc::
+
+EXAMPLES::
+
+code::
+// path to sound material
+Platform.userAppSupportDir +/+ "downloaded-quarks/Vesicle/Audio/*";
+
+// initialize Vesicle with the path
+x = Vesicle(p);
+
+// run a glisson process with a selected sound grain duration and overlap
+VesicleProc.glisson(x, "voice.wav", 0.15, 2)
+
+// run a second process that folds per grain
+VesicleProc.fold(x, "voice.wav", 0.5, 2.5)
+
+// run a third process with a bandpass filter per grain
+VesicleProc.bp(x, "voice.wav", 0.1, 2.5)
+::
