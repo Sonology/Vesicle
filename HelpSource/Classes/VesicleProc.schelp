@@ -9,7 +9,7 @@ The main interface for running link::Classes/Vesicle:: granular synthesis proces
 CLASSMETHODS::
 
 METHOD:: glisson
-Glisson sound process
+Glisson granular process
 ARGUMENT:: vesicle
 a link::Classes/Vesicle:: instance
 ARGUMENT:: sound
@@ -18,10 +18,10 @@ ARGUMENT:: dur
 ARGUMENT:: overlap
 
 METHOD:: fold
-Folding sound process. Same args as link::#*glisson::
+Folding granular process. Same args as link::#*glisson::
 
 METHOD:: bp
-Band-pass sound process. Same args as link::#*glisson::
+Granular process with per-grain band-pass filtering. Same args as link::#*glisson::
 
 METHOD:: scan
 Sample scanning process with per-grain band-pass filter
