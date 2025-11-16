@@ -3,7 +3,7 @@
 
 VesicleProc {
 
-    *glisson {|vesicle, sound, dur=0.02, overlap=2.0|
+    *glisson {|vesicle, sound, dur=0.02, overlap=2.0, ffrom=1.0, fto=2.0, tfrom=2.0, tto=10|
 
         var sample = vesicle.buffers[sound];
 
@@ -21,8 +21,8 @@ VesicleProc {
                             \buf, sample.bufnum,
                             \dur, dur,
                             \start, start,
-                            \from, i.linlin(0,times,1.0,2.0),
-                            \to, i.linlin(0,times,2.0,10.0)
+                            \from, i.linlin(0,times,ffrom,fto),
+							\to, i.linlin(0,times,tfrom,tto)
                     ]) }
                 );
 
@@ -32,7 +32,7 @@ VesicleProc {
         }.play;
     }
 
-    *fold {|vesicle, sound, dur=0.02, overlap=2.0|
+    *fold {|vesicle, sound, dur=0.02, overlap=2.0, foldfrom=0.0, folto=2.0|
 
         var sample = vesicle.buffers[sound];
 
@@ -45,7 +45,7 @@ VesicleProc {
                 var start = (i * next) / total;
 
                 Server.default.makeBundle(0.1,
-                { Synth(\grainfold, [\buf, sample.bufnum, \dur, dur, \start, 1 - start, \flo, 0.0, \fhi, 2.0]) });
+                { Synth(\grainfold, [\buf, sample.bufnum, \dur, dur, \start, 1 - start, \flo, foldfrom, \fhi, folto]) });
                 next.wait;
             };
 
@@ -53,7 +53,7 @@ VesicleProc {
 
     }
 
-    *bp {|vesicle, sound, dur=0.02, overlap=2.0|
+    *bp {|vesicle, sound, dur=0.02, overlap=2.0,bpfrom=100,bpto=8000, bw=5, start=1.0|
 
         var sample = vesicle.buffers[sound];
 
@@ -66,9 +66,9 @@ VesicleProc {
                 var start = (i * next) / total;
 
                 Server.default.makeBundle(0.1,
-                    { Synth(\grainbp, [\buf, sample.bufnum, \dur, dur, \start, 1.0.rand,
-                    \bpf, i.linlin(0,times, 100, 8000),
-                    \bw, 5
+                    { Synth(\grainbp, [\buf, sample.bufnum, \dur, dur, \start, start.rand,
+                    \bpf, i.linlin(0,times, bpfrom, bpto),
+                    \bw, bw
                 ]) });
                 next.wait;
             };
