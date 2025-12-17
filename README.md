@@ -11,7 +11,7 @@ Quarks.install("https://github.com/Sonology/Vesicle");
 // boot the sound server
 s.boot;
 
-// path to sound material
+// path to audio files
 p = Vesicle.audioFilesPath;
 
 // initialize Vesicle with the path
