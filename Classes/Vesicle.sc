@@ -8,6 +8,17 @@ Vesicle {
 		^super.newCopyArgs(path).loadBuffers(path).loadSynths();
 	}
 
+	*audioFilesPath {
+		var extensionsRoot = PathName(Platform.userExtensionDir).parentPath;
+		// checks where Vesicle is (downloaded-quarks or Extensions)
+		[
+			PathName(extensionsRoot ++ "Extensions").entries,
+			PathName(extensionsRoot ++ "downloaded-quarks").entries
+		].flat.do({ |item|
+			if (item.folderName == "Vesicle", {  ^(item.fullPath ++ "Audio/*") })
+		});
+	}
+
 	loadBuffers {|path|
 
 		{
@@ -49,36 +60,36 @@ Vesicle {
 
 		// universal grain with fold distortion
 		{ |i|
-			SynthDef(\grainunifold ++ [\m, \s][i], { |out = 0, buf = 0, start = 0.0, rate = 1.0, gdur = 1.0, 
+			SynthDef(\grainunifold ++ [\m, \s][i], { |out = 0, buf = 0, start = 0.0, rate = 1.0, gdur = 1.0,
 				flo = -0.5, fhi = 0.5,
 				skew = 0.5, width = 0.5, index = 1, pan = 0.0, amp = 0.5 |
-				
+
 				var phase = VesicleGrain.phase(gdur);
 				var sig = VesicleGrain.playBuf(i+1, buf, rate, start);
 				var env = VesicleGrain.tukeyGauss(phase, skew, width, index);
-				
+
 				sig = Fold.ar(sig, flo, fhi);
 				sig = LeakDC.ar(sig * 0.5);
 				sig = sig * env * amp;
-				
+
 				OffsetOut.ar(out, [{Pan2.ar(sig, pan)}, {Balance2.ar(sig[0], sig[1], pan)}][i]);
 			}).add
 		}.dup(2);
 
 		// universal grain with glissando
 		{ |i|
-			SynthDef(\grainunigliss ++ [\m, \s][i], { |out = 0, buf = 0, start = 0.0, 
+			SynthDef(\grainunigliss ++ [\m, \s][i], { |out = 0, buf = 0, start = 0.0,
 				rateFrom = 1.0, rateTo = 2.0, gdur = 1.0,
 				skew = 0.5, width = 0.5, index = 1, pan = 0.0, amp = 0.5 |
-				
+
 				var phase = VesicleGrain.phase(gdur);
 				var playRate = Line.ar(rateFrom, rateTo, gdur);
 				var sig = VesicleGrain.playBuf(i+1, buf, playRate, start);
 				var env = VesicleGrain.tukeyGauss(phase, skew, width, index);
-				
+
 				sig = LeakDC.ar(sig * 0.5);
 				sig = sig * env * amp;
-				
+
 				OffsetOut.ar(out, [{Pan2.ar(sig, pan)}, {Balance2.ar(sig[0], sig[1], pan)}][i]);
 			}).add
 		}.dup(2);
