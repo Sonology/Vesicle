@@ -15,8 +15,9 @@ Vesicle {
 			PathName(extensionsRoot ++ "Extensions").entries,
 			PathName(extensionsRoot ++ "downloaded-quarks").entries
 		].flat.do({ |item|
-			if (item.folderName == "Vesicle", {  ^(item.fullPath ++ "Audio/*") })
+			if (item.folderName.beginsWith("Vesicle"), { ^(item.fullPath ++ "Audio/*") })
 		});
+		^nil;
 	}
 
 	loadBuffers {|path|
