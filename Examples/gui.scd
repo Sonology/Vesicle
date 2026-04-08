@@ -8,7 +8,7 @@ s.boot;
 
 (
 
-p = Platform.userAppSupportDir +/+ "downloaded-quarks/Vesicle/Audio/*";
+p = Vesicle.audioFilesPath;
 v = Vesicle(p);
 
 )

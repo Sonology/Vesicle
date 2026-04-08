@@ -1,4 +1,4 @@
-p = Platform.userAppSupportDir +/+ "downloaded-quarks/Vesicle/Audio/*";
+p = Vesicle.audioFilesPath;
 v = Vesicle(p)
 
 // Basic fold with evolving fold range

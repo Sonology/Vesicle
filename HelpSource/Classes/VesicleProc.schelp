@@ -75,7 +75,7 @@ EXAMPLES::
 
 code::
 // path to sound material
-p = Platform.userAppSupportDir +/+ "downloaded-quarks/Vesicle/Audio/*";
+p = Vesicle.audioFilesPath;
 
 // initialize Vesicle with the path
 x = Vesicle(p);
