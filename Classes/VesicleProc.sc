@@ -3,6 +3,39 @@
 
 VesicleProc {
 
+	*multiParamDefs { |type|
+		var common = [
+			[\rate, 0.25, 4, 1, \exp],
+			[\gdur, 0.025, 1.0, 0.25, \exp],
+			[\density, 5, 150, 10, \exp],
+			[\factor, -1, 5, 1, \lin],
+			[\prob, 0, 1, 1, \lin],
+			[\amp, 0, 1, 0.75, \lin],
+			[\pan, -1, 1, 0, \lin],
+		];
+		^switch(type,
+			\scan, {
+				common ++ [
+					[\bpFreq, 70, 12000, 300, \exp],
+					[\bpBlend, 0, 1, 0, \lin],
+					[\bpRQ, 0.05, 0.75, 0.25, \exp],
+				]
+			},
+			\scanFold, {
+				common ++ [
+					[\flo, -0.8, 0, -0.5, \lin],
+					[\fhi, 0, 0.8, 0.5, \lin],
+				]
+			},
+			\scanGliss, {
+				common.reject({ |p| p[0] == \rate }) ++ [
+					[\rateFrom, 0.25, 4, 1, \exp],
+					[\rateTo, 0.25, 4, 2, \exp],
+				]
+			}
+		);
+	}
+
 	*scan { |
 		vesicle, sound, dur = 1,
 		rate = 1, gdur = 1, density = 10, factor = 1,
